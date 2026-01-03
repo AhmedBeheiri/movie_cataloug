@@ -14,7 +14,7 @@ class MovieDetailsScreen extends StatefulWidget {
 }
 
 class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
-  // Mistake: Direct dependency on implementation
+
   final MovieRepositoryImpl repo = MovieRepositoryImpl(MovieRemoteDataSource());
   Future<Movie?>? movieFuture;
 
@@ -56,9 +56,9 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
 
           final movie = snapshot.data!;
           return Column(
-            // Mistake: No SingleChildScrollView wrapping this column. Overflow guaranteed on small screens.
+
             children: [
-              // Mistake: Hardcoded height, might overflow on small screens
+
               Container(
                 height: 500, // Very tall header
                 width: double.infinity,
@@ -147,7 +147,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.5, fontSize: 16),
                     ),
                     SizedBox(height: 30),
-                    // Mistake: Hardcoded fixed height "Cast" or extra section creating overflow
+
                     Container(
                       height: 200,
                       width: double.infinity,

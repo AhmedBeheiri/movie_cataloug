@@ -10,7 +10,7 @@ class MoviesListScreen extends StatefulWidget {
 }
 
 class _MoviesListScreenState extends State<MoviesListScreen> {
-  // Mistake: Calling API in initState without checking if already loaded
+
   @override
   void initState() {
     super.initState();
@@ -33,7 +33,7 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
             return Center(child: CircularProgressIndicator(color: const Color(0xFFE50914)));
           }
 
-          // Mistake: ListView inside SingleChildScrollView (Performance issue preserved)
+
           return SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Column(
@@ -51,7 +51,7 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                     final movie = controller.movies[index];
                     return GestureDetector(
                       onTap: () {
-                        // Mistake: Direct navigation
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -72,7 +72,7 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                             )
                           ],
                           image: DecorationImage(
-                            image: NetworkImage(movie.posterUrl), // Mistake: Still not using cached network image
+                            image: NetworkImage(movie.posterUrl),
                             fit: BoxFit.cover,
                           ),
                         ),

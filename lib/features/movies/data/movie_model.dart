@@ -17,15 +17,15 @@ class MovieModel {
     return MovieModel(
       id: json['id'],
       title: json['title'],
-      posterPath: json['poster_path'] ?? '', // Bad: Should probably handle full url here or later, but empty string is risky
+      posterPath: json['poster_path'] ?? '',
       overview: json['overview'],
       voteAverage: (json['vote_average'] as num).toDouble(),
     );
   }
 
-  // Mistake: Logic inside data model used for UI formatting
+
   String get fullPosterUrl {
-    // Hardcoded base URL in model - Bad practice
+
     return 'https://image.tmdb.org/t/p/w500$posterPath';
   }
 }

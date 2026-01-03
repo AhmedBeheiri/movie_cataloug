@@ -10,7 +10,7 @@ class MovieRepositoryImpl implements MovieRepository {
   @override
   Future<List<Movie>> getTrendingMovies() async {
     final models = await dataSource.getTrendingMovies();
-    // Mistake: Manual mapping here instead of Mapper class
+    // normal mapping
     return models.map((m) => Movie(model: m)).toList();
   }
 
