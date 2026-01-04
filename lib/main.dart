@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'features/movies/data/movie_remote_data_source.dart';
+import 'features/movies/data/movie_repository_impl.dart';
+import 'features/movies/domain/get_trending_movies.dart';
 import 'features/movies/presentation/movie_controller.dart';
 import 'features/movies/presentation/movies_list_screen.dart';
+import 'l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,8 +18,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => MovieController(),
+      /// Provider manages lifecycle - creates and disposes controller
+      /// Inject all dependencies through constructor for proper DI
+      create: (_) => MovieController(
+        GetTrendingMovies(
+          MovieRepositoryImpl(MovieRemoteDataSource()),
+        ),
+      ),
       child: MaterialApp(
+        /// needed for i10n
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         title: 'Movie Catalog',
         debugShowCheckedModeBanner: false,
         theme: _buildTheme(),
@@ -26,7 +39,7 @@ class MyApp extends StatelessWidget {
 
   ThemeData _buildTheme() {
     final base = ThemeData.dark();
-    
+
     return base.copyWith(
       scaffoldBackgroundColor: const Color(0xFF151925), // Deep dark blue/grey
       primaryColor: const Color(0xFFE50914), // Netflix Red-ish

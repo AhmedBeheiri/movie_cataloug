@@ -3,14 +3,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_cataloug/features/movies/data/movie_repository_impl.dart';
 import 'package:movie_cataloug/features/movies/data/movie_remote_data_source.dart';
 import 'package:movie_cataloug/features/movies/domain/movie.dart';
+import 'package:movie_cataloug/l10n/app_localizations.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
   final int movieId;
 
-  MovieDetailsScreen({required this.movieId});
+  /// Use const constructor and add key parameter for better performance
+  const MovieDetailsScreen({
+    super.key,
+    required this.movieId,
+  });
 
   @override
-  _MovieDetailsScreenState createState() => _MovieDetailsScreenState();
+  State<MovieDetailsScreen> createState() => _MovieDetailsScreenState();
 }
 
 class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
@@ -29,7 +34,8 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true, // Make body go behind app bar for immersive effect
       appBar: AppBar(
-        title: Text("Details"), // Hardcoded string
+        /// use localisation instead of hardcoded string
+        title: Text(AppLocalizations.of(context)!.details), // Hardcoded string
         backgroundColor: Colors.transparent, // Transparent app bar
         elevation: 0,
         leading: IconButton(
@@ -55,8 +61,9 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
           }
 
           final movie = snapshot.data!;
-          return Column(
-
+          /// wrap column into a SingleChildScrollView to avoid the overflow
+          return SingleChildScrollView(
+           child: Column(
             children: [
 
               Container(
@@ -122,7 +129,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                                   borderRadius: BorderRadius.circular(5)
                                 ),
                                 child: Text(
-                                  "MOVIE",
+                                  AppLocalizations.of(context)!.movieText,
                                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                                 ),
                               )
@@ -140,7 +147,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Storyline", style: Theme.of(context).textTheme.titleLarge),
+                    Text(AppLocalizations.of(context)!.storyLine, style: Theme.of(context).textTheme.titleLarge),
                     SizedBox(height: 10),
                      Text(
                       movie.overview, 
@@ -156,14 +163,15 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                         borderRadius: BorderRadius.circular(15)
                       ),
                       child: Center(
-                        child: Text("Cast Placeholder (Overflow Risk)", style: TextStyle(color: Colors.white54)),
+                        child: Text(AppLocalizations.of(context)!.castPlaceholder, style: TextStyle(color: Colors.white54)),
                       ),
                     )
                   ],
                 ),
               ),
             ],
-          );
+          )
+         );
         },
       ),
     );

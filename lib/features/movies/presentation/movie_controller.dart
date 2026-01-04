@@ -6,39 +6,49 @@ import 'package:movie_cataloug/features/movies/data/movie_remote_data_source.dar
 
 class MovieController extends ChangeNotifier {
 
-  static final MovieController _instance = MovieController._internal();
-  factory MovieController() => _instance;
-  MovieController._internal();
+  // static final MovieController _instance = MovieController._internal();
+  // factory MovieController() => _instance;
+  // MovieController._internal();
 
+  final GetTrendingMovies _getTrendingMovies;
 
-  BuildContext? context;
+  /// Remove singleton pattern - inject dependencies in constructor
+  MovieController(this._getTrendingMovies);
+
+  // BuildContext? context;
 
   List<Movie> movies = [];
   bool isLoading = false;
 
-  void setContext(BuildContext c) {
-    context = c;
-  }
+  /// context shall be passed and not stored in a variable to avoid memory leaks
+  // void setContext(BuildContext c) {
+  //   context = c;
+  // }
 
-
-  final GetTrendingMovies _getTrendingMovies = GetTrendingMovies(
-    MovieRepositoryImpl(MovieRemoteDataSource()),
-  );
 
   Future<void> fetchMovies() async {
     isLoading = true;
     notifyListeners();
 
     try {
-
-      await Future.delayed(Duration(seconds: 2)); 
+      /// fake delay is bad for performance
+      // await Future.delayed(Duration(seconds: 2));
       movies = await _getTrendingMovies();
     } catch (e) {
-
+      /// Clear movies list on error
+      movies = [];
       print(e);
     } finally {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    /// Clean up resources before disposal
+    /// Clear list to free memory references
+    movies.clear();
+    super.dispose();
   }
 }
