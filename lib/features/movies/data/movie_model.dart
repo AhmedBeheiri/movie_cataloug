@@ -23,9 +23,9 @@ class MovieModel {
     );
   }
 
-
-  String get fullPosterUrl {
-
-    return 'https://image.tmdb.org/t/p/w500$posterPath';
-  }
+  /// removed helper method from model
+  // String get fullPosterUrl {
+  //
+  //   return 'https://image.tmdb.org/t/p/w500$posterPath';
+  // }
 }

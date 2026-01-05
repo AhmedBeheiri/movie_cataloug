@@ -1,8 +1,9 @@
 
 
+import '../core/result.dart';
 import 'movie.dart';
 
 abstract class MovieRepository {
-  Future<List<Movie>> getTrendingMovies();
-  Future<Movie?> getMovieDetails(int id);
+  Future<Result<List<Movie>>> getTrendingMovies();
+  Future<Result<Movie>> getMovieDetails(int id);
 }

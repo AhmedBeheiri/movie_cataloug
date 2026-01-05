@@ -1,3 +1,5 @@
+import 'package:movie_cataloug/features/movies/core/result.dart';
+
 import 'movie_repository.dart';
 import 'movie.dart';
 
@@ -6,7 +8,7 @@ class GetTrendingMovies {
 
   GetTrendingMovies(this.repository);
 
-  Future<List<Movie>> call() {
+  Future<Result<List<Movie>>> call() {
     return repository.getTrendingMovies();
   }
 }

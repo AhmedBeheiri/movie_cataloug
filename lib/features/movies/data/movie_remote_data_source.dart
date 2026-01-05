@@ -1,48 +1,50 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:movie_cataloug/features/movies/core/result.dart';
+import '../core/constants.dart';
 import 'movie_model.dart';
 
 class MovieRemoteDataSource {
 
-  final String apiKey = 'dd5b273e783e966d89f5607f8bc77f15';
-  final String baseUrl = 'https://api.themoviedb.org/3';
-
-  Future<List<MovieModel>> getTrendingMovies() async {
+  /// api key and base url moved to constants.dart
+  Future<Result<List<MovieModel>>> getTrendingMovies() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/trending/movie/week?api_key=$apiKey'),
+        Uri.parse('${Constants.baseUrl}/trending/movie/week?api_key=${Constants.apiKey}'),
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final List results = data['results'];
-        return results.map((e) => MovieModel.fromJson(e)).toList();
+        final movies = results.map((e) => MovieModel.fromJson(e)).toList();
+        return Success(movies);
       } else {
-
-        print('Error: ${response.statusCode}');
-        return [];
+        return Failure('Server error: ${response.statusCode}');
       }
-    } catch (e) {
-
-      print(e);
-      return [];
-    }
+    } on SocketException {
+      return Failure('No internet connection');
+      } catch (e) {
+        return Failure('An unexpected error occurred');
+      }
   }
 
-  Future<MovieModel?> getMovieDetails(int id) async {
+  Future<Result<MovieModel?>> getMovieDetails(int id) async {
      try {
       final response = await http.get(
-        Uri.parse('$baseUrl/movie/$id?api_key=$apiKey'),
+        Uri.parse('${Constants.baseUrl}/movie/$id?api_key=${Constants.apiKey}'),
       );
 
       if (response.statusCode == 200) {
-        return MovieModel.fromJson(json.decode(response.body));
+        final movie = MovieModel.fromJson(json.decode(response.body));
+        return Success(movie);
       } else {
-        return null;
+        return Failure('Failed to fetch movie details');
       }
-    } catch (e) {
-      print(e);
-      return null;
-    }
+    }  on SocketException {
+       return Failure('No internet connection');
+     } catch (e) {
+       return Failure('An unexpected error occurred');
+     }
   }
 }
