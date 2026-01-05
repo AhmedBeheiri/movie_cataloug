@@ -1,9 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_cataloug/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'movie_controller.dart';
-import 'movie_details_screen.dart';
 
 class MoviesListScreen extends StatefulWidget {
 
@@ -42,6 +42,29 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
           if (controller.isLoading) {
             return Center(child: CircularProgressIndicator(color: const Color(0xFFE50914)));
           }
+          /// error propagation into ui
+
+          if (controller.errorMessage != null) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 60, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text(controller.errorMessage!, style: TextStyle(color: Colors.white)),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => controller.fetchMovies(),
+                    child: Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (controller.movies.isEmpty) {
+            return Center(child: Text('No movies found', style: TextStyle(color: Colors.white)));
+          }
 
           /// Avoid expensive wrap operations by using ListView.builder only instead of wrapping
           /// the entire list in SingleChildScrollView with Column for better performance
@@ -71,16 +94,22 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                     return GestureDetector(
                       onTap: () {
 
-                        Navigator.push(
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => MovieDetailsScreen(movieId: movie.id),
+                        //   ),
+                        // );
+                        /// Replace Navigator.push with named route
+                        Navigator.pushNamed(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => MovieDetailsScreen(movieId: movie.id),
-                          ),
+                          '/details',
+                          arguments: movie.id,
                         );
                       },
                       child: Container(
                         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        height: 250, // Fixed height
+                        height: MediaQuery.of(context).size.height * 0.25, /// 25% of screen height
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
@@ -91,7 +120,9 @@ class _MoviesListScreenState extends State<MoviesListScreen> {
                             )
                           ],
                           image: DecorationImage(
-                            image: NetworkImage(movie.posterUrl),
+                            /// Replace with cached image
+                            // image: NetworkImage(movie.posterUrl),
+                            image: CachedNetworkImageProvider(movie.posterUrl),
                             fit: BoxFit.cover,
                           ),
                         ),
